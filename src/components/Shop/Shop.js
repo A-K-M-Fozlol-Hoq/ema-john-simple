@@ -9,14 +9,14 @@ const Shop = () => {
     // const first10 = fakeData.slice(0, 10);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
-
+    const [search, setSearch]= useState('');
     useEffect(()=>{
-        fetch('http://localhost:5000/products')
+        fetch('http://localhost:5000/products?search='+search)
         .then(res => res.json())
         .then(data => {
             setProducts(data)
         })
-    },[])
+    },[search])
 
     useEffect(() => {
         const savedCart = getDatabaseCart();
@@ -34,7 +34,9 @@ const Shop = () => {
 
     }, [])
 
-
+    const handleSearch = event => {
+        setSearch(event.target.value)
+    }
     const handleAddProduct = (product) => {
         const toBeAddedKey = product.key;
         const sameProduct = cart.find(pd => pd.key === toBeAddedKey);
@@ -56,6 +58,7 @@ const Shop = () => {
     return (
         <div className="shop-container">
             <div className="product-container">
+                <input type="text" onBlur={handleSearch} placeholder="Search Product"/>
                 {
                     products.map(pd =>
                         <Product
